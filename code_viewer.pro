@@ -4,22 +4,22 @@
 
 TEMPLATE = app
 TARGET = 
-DEPENDPATH += .
-INCLUDEPATH += .
+DEPENDPATH += . /usr/lib/graphviz
+INCLUDEPATH += . /usr/include/graphviz
 QMAKE_CXXFLAGS += -std=c++11
+
+unix:!macx: LIBS += -L/usr/lib/graphviz/ `pkg-config libgvc --libs`
 
 # Input
 HEADERS += \
     viewer.h \
-    scene.h \
-    node.h \
-    edge.h
+    graph.h \
+    drawing.h
 SOURCES += app.cpp \
     viewer.cpp \
-    scene.cpp \
-    node.cpp \
-    edge.cpp
+    graph.cpp \
+	drawing.cpp \
 
 FORMS += \
-    viewer.ui \
-    scene.ui
+    viewer.ui
+
