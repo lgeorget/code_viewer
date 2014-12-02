@@ -1,43 +1,24 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifndef DRAWING_H
+#define DRAWING_H
 
 #include <QWidget>
-#include <QProcess>
 #include <QGraphicsScene>
-#include <QMap>
-#include "node.h"
+#include <QGraphicsView>
+#include "graph.h"
 
-namespace Ui {
-	class Scene;
-}
-
-class Scene : public QWidget
+class Drawing : public QGraphicsView
 {
 	Q_OBJECT
 
 public:
-	explicit Scene(QString filename, QWidget *parent = 0);
-	~Scene();
-	void parseGraph(QList<QByteArray> b);
-	void parseNode(QList<QByteArray> b);
-	void parseEdge(QList<QByteArray> b);
-	QGraphicsView *view() const;
+	explicit Drawing(QString filename, QWidget *parent = 0);
+	~Drawing();
 
-public slots:
-	void drawSomething();
-	void cleanGV(int status);
-	void repaint();
+protected:
+	virtual void wheelEvent(QWheelEvent *event);
 
 private:
-	Ui::Scene *ui;
-	QProcess *_gv;
-	QGraphicsScene *_drawing;
-	QGraphicsView *_view;
-	QMap<QString,Node*> _nodes;
-
-	static const int RAW_BUFFER_SIZE = 4096;
-	char _raw[RAW_BUFFER_SIZE];
-	int _r;
+	QGraphicsScene *_graph;
 };
 
-#endif // SCENE_H
+#endif // DRAWING_H

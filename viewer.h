@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include <QListWidget>
-#include "scene.h"
+#include "graph.h"
 
 namespace Ui {
   class Viewer;
@@ -22,7 +22,8 @@ public slots:
 
 private:
   Ui::Viewer *ui;
-  QList<Scene *> _scenes;
+//  QList<Drawing *> _scenes;
+  Graph *_g;
 };
 
 #endif // VIEWER_H

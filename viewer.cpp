@@ -2,6 +2,7 @@
 #include <QFileDialog>
 #include <QGraphicsView>
 #include "viewer.h"
+#include "drawing.h"
 #include "ui_viewer.h"
 
 Viewer::Viewer(QWidget *parent) :
@@ -17,14 +18,16 @@ void Viewer::openGraph()
 {
 	QString filename = QFileDialog::getOpenFileName(this);
 	if (!filename.isEmpty()) {
-		Scene* sc = new Scene(filename);
-		_scenes.append(sc);
+		Drawing* d = new Drawing(filename);
+		//_scenes.append(sc);
 		//ui->docs->setActiveSubWindow(ui->docs->addSubWindow(sc->view()));
-		setCentralWidget(sc->view());
+		setCentralWidget(d);
+
 	}
 }
 
 Viewer::~Viewer()
 {
 	delete ui;
+	delete _g;
 }
