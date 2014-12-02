@@ -14,11 +14,13 @@ unix:!macx: LIBS += -L/usr/lib/graphviz/ `pkg-config libgvc --libs`
 HEADERS += \
     viewer.h \
     graph.h \
-    drawing.h
+    drawing.h \
+    node.h
 SOURCES += app.cpp \
     viewer.cpp \
     graph.cpp \
 	drawing.cpp \
+    node.cpp
 
 FORMS += \
     viewer.ui

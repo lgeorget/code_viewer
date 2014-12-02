@@ -1,12 +1,12 @@
 #include <QString>
 #include <cstdio>
 #include <exception>
-#include <QGraphicsEllipseItem>
 #include <QGraphicsPathItem>
 #include <QPair>
 #include <QDebug>
 #include <types.h>
 #include "graph.h"
+#include "node.h"
 
 Graph::Graph(const QString& filename) : QGraphicsScene(), _gv_con(gvContext()), _graph()
 {
@@ -57,21 +57,8 @@ void Graph::doLayout()
 
 void Graph::addNode(Agnode_t* v)
 {
-
-
-	QGraphicsEllipseItem* node = new QGraphicsEllipseItem(ND_coord(v).x*(_dpi/DOT_DEFAULT_DPI) - ND_width(v)*_dpi/2,
-														  (GD_bb(_graph).UR.y - ND_coord(v).y)*(_dpi/DOT_DEFAULT_DPI) - ND_height(v)*_dpi/2,
-														  ND_width(v)*_dpi,
-														  ND_height(v)*_dpi);
-
-//	qDebug() << "Adding node " << v->name << " at coords " << node->x() << ", " << node->y() << ", " << node->boundingRect();
+	Node* node = new Node(_graph,v,_dpi,DOT_DEFAULT_DPI);
 	addItem(node);
-
-	QGraphicsSimpleTextItem *label = new QGraphicsSimpleTextItem(v->name, node);
-	label->setFont(MONOSPACE_FONT);
-	label->setPos(ND_coord(v).x*(_dpi/DOT_DEFAULT_DPI) - ND_width(v)*_dpi/2 + 20,
-				  (GD_bb(_graph).UR.y - ND_coord(v).y)*(_dpi/DOT_DEFAULT_DPI) - 5);
-
 	_nodes[v->name] = node;
 }
 
