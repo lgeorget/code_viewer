@@ -46,7 +46,7 @@ Graph::~Graph()
 	qDeleteAll(_edges);
 }
 
-void Graph::hideSubTree(Node *n)
+void Graph::pimpSubTree(Node *n, std::function<void (Element &)> f, std::function<bool (Element&)> test)
 {
 	Agnode_t* v = n->_gv_node;
 	QQueue<Agnode_t*> waitingNodes;
@@ -54,20 +54,20 @@ void Graph::hideSubTree(Node *n)
 	waitingNodes.enqueue(v);
 	while (!waitingNodes.empty()) {
 		Agnode_t* currentNode = waitingNodes.dequeue();
-		_nodes[currentNode->id]->hide();
+		f(*_nodes[currentNode->id]);
 		for (Agedge_t* in = agfstin(_graph,currentNode) ; in ; in = agnxtin(_graph,in)) {
-			_edges[in->id]->hide();
+			f(*_edges[in->id]);
 		}
 
 		for (Agedge_t* e = agfstout(_graph,currentNode) ; e ; e = agnxtout(_graph,e)) {
 			Agnode_t* nextNode = e->head;
 			bool toProcess = true;
 			for (Agedge_t* in = agfstin(_graph,nextNode) ; (in != nullptr) && toProcess ; in = agnxtin(_graph,in)) {
-				if (_nodes[in->tail->id]->isVisible()) {
+				if (test(*_nodes[in->tail->id])) {
 					toProcess = false;
 				}
 			}
-			_edges[e->id]->hide();
+			f(*_edges[e->id]);
 			if (toProcess) {
 				waitingNodes.enqueue(nextNode);
 			}
@@ -75,11 +75,11 @@ void Graph::hideSubTree(Node *n)
 	}
 }
 
-void Graph::hideSubTree(Edge *e)
+void Graph::pimpSubTree(Edge *e, std::function<void (Element &)> f, std::function<bool (Element&)> test)
 {
-	e->hide();
+	f(*e);
 	Node *n = _nodes[e->_gv_edge->head->id];
-	hideSubTree(n);
+	pimpSubTree(n,f,test);
 }
 
 const Agraph_t *Graph::getAgraph() const

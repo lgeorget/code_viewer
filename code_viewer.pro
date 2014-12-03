@@ -16,13 +16,15 @@ HEADERS += \
     graph.h \
     drawing.h \
     node.h \
-    edge.h
+    edge.h \
+    element.h
 SOURCES += app.cpp \
     viewer.cpp \
     graph.cpp \
 	drawing.cpp \
     node.cpp \
-    edge.cpp
+    edge.cpp \
+    element.cpp
 
 FORMS += \
     viewer.ui

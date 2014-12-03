@@ -4,31 +4,31 @@
 #include <QGraphicsObject>
 #include <QGraphicsEllipseItem>
 #include <QGraphicsSimpleTextItem>
+#include <QPen>
 #include <QFont>
 #include <gvc.h>
 #include <types.h>
+#include "element.h"
 
 class Graph;
 
-class Node : public QGraphicsObject
+class Node : public Element
 {
 	Q_OBJECT
 public:
 	explicit Node(Agnode_t *v, Graph* graph, QGraphicsItem *parent = 0);
 	~Node();
-	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-	virtual QRectF boundingRect() const;
-	void hide();
+	virtual void hide();
 
 signals:
 
 public slots:
-	virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+	void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+	void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
 private:
-	Graph* _graph;
 	Agnode_t* _gv_node;
-	QGraphicsEllipseItem* _inner;
 	QGraphicsSimpleTextItem* _label;
 
 friend class Graph;

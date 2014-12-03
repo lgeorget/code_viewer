@@ -5,28 +5,24 @@
 #include <QGraphicsPathItem>
 #include <gvc.h>
 #include <types.h>
+#include "element.h"
 
 class Graph;
 
-class Edge : public QGraphicsObject
+class Edge : public Element
 {
 	Q_OBJECT
 public:
 	explicit Edge(Agedge_t *v, Graph* graph, QGraphicsItem *parent = 0);
-	~Edge();
-	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-	virtual QRectF boundingRect() const;
-	void hide();
+	virtual void hide();
 
 signals:
 
 public slots:
-	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-	Graph* _graph;
 	Agedge_t* _gv_edge;
-	QGraphicsPathItem* _inner;
 
 friend class Graph;
 };

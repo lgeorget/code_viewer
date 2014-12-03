@@ -8,9 +8,11 @@
 #include <QMap>
 #include <QPair>
 #include <QFont>
+#include <functional>
 
 class Node;
 class Edge;
+class Element;
 
 class Graph : public QGraphicsScene
 {
@@ -19,8 +21,8 @@ class Graph : public QGraphicsScene
 public:
 	Graph(const QString& filename);
 	~Graph();
-	void hideSubTree(Node *n);
-	void hideSubTree(Edge *e);
+	void pimpSubTree(Node *n, std::function<void (Element &)> f, std::function<bool (Element&)> test);
+	void pimpSubTree(Edge *e, std::function<void (Element &)> f, std::function<bool (Element&)> test);
 
 	static const qreal DOT_DEFAULT_DPI;
 	static const QFont MONOSPACE_FONT;

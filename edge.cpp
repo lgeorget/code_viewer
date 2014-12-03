@@ -1,13 +1,13 @@
 #include <QFont>
 #include <QDebug>
+#include <QAbstractGraphicsShapeItem>
+#include <QGraphicsPathItem>
 #include "edge.h"
 #include "graph.h"
 
 Edge::Edge(Agedge_t *e, Graph *graph, QGraphicsItem *parent) :
-	QGraphicsObject(parent),
-	_graph(graph),
-	_gv_edge(e),
-	_inner(new QGraphicsPathItem(this))
+	Element(graph, parent),
+	_gv_edge(e)
 {
 	qreal dpi = _graph->getDpi();
 	qreal scale = dpi/_graph->DOT_DEFAULT_DPI;
@@ -52,27 +52,13 @@ Edge::Edge(Agedge_t *e, Graph *graph, QGraphicsItem *parent) :
 	}
 	// -----END SHAMELESSLY COPY-PASTED CODE-----
 
-	_inner->setPath(path);
+	_inner = new QGraphicsPathItem(path,this);
+	_inner->setPen(DEFAULT_PEN);
 }
 
-QRectF Edge::boundingRect() const
+void Edge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-	return _inner->boundingRect();
-}
-
-void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-	_inner->paint(painter, option, widget);
-}
-
-Edge::~Edge()
-{
-	delete _inner;
-}
-
-void Edge::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-	_graph->hideSubTree(this);
+	_graph->pimpSubTree(this,&Element::hide,&Edge::isVisible);
 }
 
 void Edge::hide()
