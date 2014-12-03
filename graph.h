@@ -9,6 +9,9 @@
 #include <QPair>
 #include <QFont>
 
+class Node;
+class Edge;
+
 class Graph : public QGraphicsScene
 {
 	Q_OBJECT
@@ -16,8 +19,12 @@ class Graph : public QGraphicsScene
 public:
 	Graph(const QString& filename);
 	~Graph();
+	void hideSubTree(Node *n);
+	void hideSubTree(Edge *e);
+
 	static const qreal DOT_DEFAULT_DPI;
 	static const QFont MONOSPACE_FONT;
+
 	const Agraph_t* getAgraph() const;
 	qreal getDpi() const;
 
@@ -32,8 +39,8 @@ private:
 	GVC_t* _gv_con;
 	Agraph_t* _graph;
 	qreal _dpi;
-	QMap<QString,QGraphicsItem*> _nodes;
-	QMap<QPair<QString,QString>,QGraphicsItem*> _edges;
+	QMap<int,Node*> _nodes;
+	QMap<int,Edge*> _edges;
 };
 
 #endif // GRAPH_H

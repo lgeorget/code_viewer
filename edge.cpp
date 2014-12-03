@@ -3,7 +3,7 @@
 #include "edge.h"
 #include "graph.h"
 
-Edge::Edge(Agedge_t *e, const Graph *graph, QGraphicsItem *parent) :
+Edge::Edge(Agedge_t *e, Graph *graph, QGraphicsItem *parent) :
 	QGraphicsObject(parent),
 	_graph(graph),
 	_gv_edge(e),
@@ -68,4 +68,15 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 Edge::~Edge()
 {
 	delete _inner;
+}
+
+void Edge::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+	_graph->hideSubTree(this);
+}
+
+void Edge::hide()
+{
+	agsafeset(_gv_edge,"style","invisible","invisible");
+	QGraphicsItem::hide();
 }

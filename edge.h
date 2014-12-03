@@ -12,19 +12,23 @@ class Edge : public QGraphicsObject
 {
 	Q_OBJECT
 public:
-	explicit Edge(Agedge_t *v, const Graph* graph, QGraphicsItem *parent = 0);
+	explicit Edge(Agedge_t *v, Graph* graph, QGraphicsItem *parent = 0);
 	~Edge();
 	virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 	virtual QRectF boundingRect() const;
+	void hide();
 
 signals:
 
 public slots:
+	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
-	const Graph* _graph;
+	Graph* _graph;
 	Agedge_t* _gv_edge;
 	QGraphicsPathItem* _inner;
+
+friend class Graph;
 };
 
 #endif // EDGE_H

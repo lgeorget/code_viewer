@@ -1,8 +1,10 @@
-#include <QString>
 #include <cstdio>
+#include <cstring>
+#include <QString>
 #include <exception>
 #include <QGraphicsPathItem>
 #include <QPair>
+#include <QQueue>
 #include <QDebug>
 #include <types.h>
 #include "graph.h"
@@ -44,6 +46,42 @@ Graph::~Graph()
 	qDeleteAll(_edges);
 }
 
+void Graph::hideSubTree(Node *n)
+{
+	Agnode_t* v = n->_gv_node;
+	QQueue<Agnode_t*> waitingNodes;
+
+	waitingNodes.enqueue(v);
+	while (!waitingNodes.empty()) {
+		Agnode_t* currentNode = waitingNodes.dequeue();
+		_nodes[currentNode->id]->hide();
+		for (Agedge_t* in = agfstin(_graph,currentNode) ; in ; in = agnxtin(_graph,in)) {
+			_edges[in->id]->hide();
+		}
+
+		for (Agedge_t* e = agfstout(_graph,currentNode) ; e ; e = agnxtout(_graph,e)) {
+			Agnode_t* nextNode = e->head;
+			bool toProcess = true;
+			for (Agedge_t* in = agfstin(_graph,nextNode) ; (in != nullptr) && toProcess ; in = agnxtin(_graph,in)) {
+				if (_nodes[in->tail->id]->isVisible()) {
+					toProcess = false;
+				}
+			}
+			_edges[e->id]->hide();
+			if (toProcess) {
+				waitingNodes.enqueue(nextNode);
+			}
+		}
+	}
+}
+
+void Graph::hideSubTree(Edge *e)
+{
+	e->hide();
+	Node *n = _nodes[e->_gv_edge->head->id];
+	hideSubTree(n);
+}
+
 const Agraph_t *Graph::getAgraph() const
 {
 	return _graph;
@@ -73,12 +111,12 @@ void Graph::addNode(Agnode_t* v)
 {
 	Node* node = new Node(v,this);
 	addItem(node);
-	_nodes[v->name] = node;
+	_nodes[v->id] = node;
 }
 
 void Graph::addEdge(Agedge_t* e)
 {
 	Edge* edge = new Edge(e,this);
 	addItem(edge);
-	_edges[QPair<QString,QString>(e->head->name,e->tail->name)] = edge;
+	_edges[e->id] = edge;
 }
