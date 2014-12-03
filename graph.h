@@ -16,6 +16,10 @@ class Graph : public QGraphicsScene
 public:
 	Graph(const QString& filename);
 	~Graph();
+	static const qreal DOT_DEFAULT_DPI;
+	static const QFont MONOSPACE_FONT;
+	const Agraph_t* getAgraph() const;
+	qreal getDpi() const;
 
 public slots:
 	void doLayout();
@@ -27,11 +31,9 @@ private:
 
 	GVC_t* _gv_con;
 	Agraph_t* _graph;
-	const qreal DOT_DEFAULT_DPI=72.0;
 	qreal _dpi;
 	QMap<QString,QGraphicsItem*> _nodes;
 	QMap<QPair<QString,QString>,QGraphicsItem*> _edges;
-	const QFont MONOSPACE_FONT = QFont("Monospace", 10, QFont::Normal);
 };
 
 #endif // GRAPH_H

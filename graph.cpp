@@ -6,7 +6,11 @@
 #include <QDebug>
 #include <types.h>
 #include "graph.h"
+#include "edge.h"
 #include "node.h"
+
+const qreal Graph::DOT_DEFAULT_DPI = 72.0;
+const QFont Graph::MONOSPACE_FONT = QFont("Monospace", 15, QFont::Normal);
 
 Graph::Graph(const QString& filename) : QGraphicsScene(), _gv_con(gvContext()), _graph()
 {
@@ -40,10 +44,20 @@ Graph::~Graph()
 	qDeleteAll(_edges);
 }
 
+const Agraph_t *Graph::getAgraph() const
+{
+	return _graph;
+}
+
+qreal Graph::getDpi() const
+{
+	return _dpi;
+}
+
 void Graph::setAttrs()
 {
 	agnodeattr(_graph, "fontname", const_cast<char*>(qPrintable(MONOSPACE_FONT.family())));
-	agnodeattr(_graph, "fontsize", const_cast<char*>(qPrintable(QString("%1").arg(MONOSPACE_FONT.pointSizeF()*_dpi/DOT_DEFAULT_DPI))));
+	agnodeattr(_graph, "fontsize", const_cast<char*>(qPrintable(QString("%1").arg(MONOSPACE_FONT.pointSizeF()*DOT_DEFAULT_DPI/_dpi))));
 }
 
 void Graph::doLayout()
@@ -57,7 +71,7 @@ void Graph::doLayout()
 
 void Graph::addNode(Agnode_t* v)
 {
-	Node* node = new Node(_graph,v,_dpi,DOT_DEFAULT_DPI);
+	Node* node = new Node(v,this);
 	addItem(node);
 	_nodes[v->name] = node;
 }
