@@ -58,7 +58,7 @@ Edge::Edge(Agedge_t *e, Graph *graph, QGraphicsItem *parent) :
 
 void Edge::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-	_graph->pimpSubTree(this,&Element::hide,&Edge::isVisible);
+	_graph->pimpSubTree(this,&Element::hide,&Edge::isVisible,true);
 }
 
 void Edge::hide()

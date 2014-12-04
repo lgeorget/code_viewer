@@ -49,16 +49,16 @@ void Node::hide()
 void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
 	std::function<void(Element&)> callback = &Element::hide;
-	_graph->pimpSubTree(this,callback,&Node::isVisible);
+	_graph->pimpSubTree(this,callback,&Node::isVisible,true);
 }
 
 void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-	_graph->pimpSubTree(this,&Element::highlight, &Element::isUnhighlighted);
+	_graph->pimpSubTree(this,&Element::highlight);
 }
 
 void Node::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
 	if (!isSelected()) //FIXME: vérifier qu'un ancêtre n'est pas sélectionné
-		_graph->pimpSubTree(this, &Element::unhighlight, &Element::isHighlighted);
+		_graph->pimpSubTree(this, &Element::unhighlight);
 }

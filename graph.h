@@ -21,8 +21,8 @@ class Graph : public QGraphicsScene
 public:
 	Graph(const QString& filename);
 	~Graph();
-	void pimpSubTree(Node *n, std::function<void (Element &)> f, std::function<bool (Element&)> test);
-	void pimpSubTree(Edge *e, std::function<void (Element &)> f, std::function<bool (Element&)> test);
+	void pimpSubTree(Node *n, std::function<void (Element &)> f, std::function<bool (Element&)> test = nullptr, bool incomingEdgesAreConcerned =  false);
+	void pimpSubTree(Edge *e, std::function<void (Element &)> f, std::function<bool (Element&)> test = nullptr, bool incomingEdgesAreConcerned =  false);
 
 	static const qreal DOT_DEFAULT_DPI;
 	static const QFont MONOSPACE_FONT;

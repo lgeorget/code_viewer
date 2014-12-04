@@ -46,7 +46,7 @@ Graph::~Graph()
 	qDeleteAll(_edges);
 }
 
-void Graph::pimpSubTree(Node *n, std::function<void (Element &)> f, std::function<bool (Element&)> test)
+void Graph::pimpSubTree(Node *n, std::function<void (Element &)> f, std::function<bool (Element&)> test, bool incomingEdgesAreConcerned)
 {
 	Agnode_t* v = n->_gv_node;
 	QQueue<Agnode_t*> waitingNodes;
@@ -55,15 +55,17 @@ void Graph::pimpSubTree(Node *n, std::function<void (Element &)> f, std::functio
 	while (!waitingNodes.empty()) {
 		Agnode_t* currentNode = waitingNodes.dequeue();
 		f(*_nodes[currentNode->id]);
-		for (Agedge_t* in = agfstin(_graph,currentNode) ; in ; in = agnxtin(_graph,in)) {
-			f(*_edges[in->id]);
+		if (incomingEdgesAreConcerned) {
+			for (Agedge_t* in = agfstin(_graph,currentNode) ; in ; in = agnxtin(_graph,in)) {
+				f(*_edges[in->id]);
+			}
 		}
 
 		for (Agedge_t* e = agfstout(_graph,currentNode) ; e ; e = agnxtout(_graph,e)) {
 			Agnode_t* nextNode = e->head;
 			bool toProcess = true;
 			for (Agedge_t* in = agfstin(_graph,nextNode) ; (in != nullptr) && toProcess ; in = agnxtin(_graph,in)) {
-				if (test(*_nodes[in->tail->id])) {
+				if (test != nullptr && test(*_nodes[in->tail->id])) {
 					toProcess = false;
 				}
 			}
@@ -75,7 +77,7 @@ void Graph::pimpSubTree(Node *n, std::function<void (Element &)> f, std::functio
 	}
 }
 
-void Graph::pimpSubTree(Edge *e, std::function<void (Element &)> f, std::function<bool (Element&)> test)
+void Graph::pimpSubTree(Edge *e, std::function<void (Element &)> f, std::function<bool (Element&)> test, bool incomingEdgesAreConcerned)
 {
 	f(*e);
 	Node *n = _nodes[e->_gv_edge->head->id];
